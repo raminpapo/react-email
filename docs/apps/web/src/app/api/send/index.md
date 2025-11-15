@@ -1,0 +1,21 @@
+# Index: send
+
+**Folder Path:** `apps/web/src/app/api/send`
+**Generated:** 2025-11-15T20:38:37.579866Z
+
+---
+
+## Contents
+
+### Subdirectories
+
+- [test/](test/index.md)
+
+---
+
+## Navigation
+
+- [↑ Parent Directory](../index.md)
+- [📚 Documentation Overview](doc.md)
+- [🔍 Keywords Index](sub.md)
+- [🏠 Root Index](../index.md)

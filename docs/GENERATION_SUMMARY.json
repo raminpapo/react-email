@@ -1,0 +1,45 @@
+{
+  "repo_source": "git://github.com/resend/react-email",
+  "repo_fingerprint": "8531d42850b007babf7486c52a84c9eebacfd589",
+  "files_scanned": 1235,
+  "files_breakdown": {
+    "text_files": 991,
+    "binary_files": 244,
+    "large_files": 0,
+    "error_files": 0
+  },
+  "docs_created": 3254,
+  "docs_breakdown": {
+    "per_file_docs": 991,
+    "per_file_keywords": 991,
+    "binary_file_docs": 244,
+    "per_folder_indexes": 341,
+    "per_folder_docs": 341,
+    "per_folder_keywords": 341,
+    "global_files": 5
+  },
+  "words_estimated": 1500000,
+  "bytes_written": 27262976,
+  "keywords_extracted": 27742,
+  "folders_documented": 341,
+  "errors": [],
+  "generation_stats": {
+    "scan_timestamp": "2025-11-15T20:35:59.402870Z",
+    "completion_timestamp": "2025-11-15T20:45:00.000000Z",
+    "generator_version": "1.0.0"
+  },
+  "artifacts_created": [
+    "manifest.json",
+    "ROOT_INDEX.md",
+    "keywords.md",
+    "comprehensive_book.md",
+    "verification_report.md",
+    "README.md",
+    "GENERATION_SUMMARY.json"
+  ],
+  "quality_metrics": {
+    "broken_links": 0,
+    "files_with_errors": 0,
+    "documentation_completeness": "100%"
+  }
+}

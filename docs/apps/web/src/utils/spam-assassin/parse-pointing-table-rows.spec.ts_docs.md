@@ -1,0 +1,423 @@
+# Documentation: parse-pointing-table-rows.spec.ts
+**File Path:** `apps/web/src/utils/spam-assassin/parse-pointing-table-rows.spec.ts`
+**Language:** typescript
+**Size:** 6,638 bytes
+**Lines:** 151
+**Generated:** 2025-11-15T20:37:32.812165Z
+
+---
+
+## Table of Contents
+
+1. [File Metadata](#file-metadata)
+2. [Original Source](#original-source)
+3. [Overview](#overview)
+4. [Detailed Analysis](#detailed-analysis)
+5. [Keywords & Identifiers](#keywords--identifiers)
+6. [Related Files](#related-files)
+
+---
+
+## File Metadata
+
+- **Path:** `apps/web/src/utils/spam-assassin/parse-pointing-table-rows.spec.ts`
+- **Name:** `parse-pointing-table-rows.spec.ts`
+- **Extension:** `.ts`
+- **Language:** typescript
+- **Size:** 6,638 bytes (6.48 KB)
+- **Lines of Code:** 151
+
+---
+
+## Original Source
+
+```typescript
+import { parsePointingTableRows } from './parse-pointing-table-rows';
+
+describe('parsePointingTableRows()', () => {
+  test('works with spammy emails', () => {
+    const spamdResponse = `Received: from localhost by gabriels-computer
+        with SpamAssassin (version 4.0.1);
+        Mon, 10 Feb 2025 09:21:23 -0300
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-26) on gabriels-computer
+X-Spam-Flag: YES
+X-Spam-Level: **********
+X-Spam-Status: Yes, score=10.2 required=5.0 tests=DRUGS_ERECTILE,HTML_MESSAGE,
+        MISSING_DATE,MISSING_FROM,MISSING_HEADERS,MISSING_MID,MISSING_SUBJECT,
+        MONEY_BACK,NO_HEADERS_MESSAGE,NO_RECEIVED,NO_RELAYS autolearn=no
+        autolearn_force=no version=4.0.1
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----------=_67A9EF43.EC247F5D"
+
+This is a multi-part message in MIME format.
+
+------------=_67A9EF43.EC247F5D
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+Spam detection software, running on the system "gabriels-computer",
+has identified this incoming email as possible spam.  The original
+message has been attached to this so you can view it or label
+similar future email.  If you have any questions, see
+root@localhost for details.
+
+Content preview:  This email is spam. We sell rolexss for cheap. Get your viagra.
+   We also sell weight loss pills today. Money back guaranteed. sEnd me $500
+   and I'll send you back $700. don't tell anyone. Send this emai [...] 
+
+Content analysis details:   (10.2 points, 5.0 required)
+
+ pts rule name              description
+---- ---------------------- --------------------------------------------------
+ 1.8 MISSING_SUBJECT        Missing Subject: header                           
+ 1.4 MISSING_DATE           Missing Date: header                              
+ 0.1 MISSING_MID            Missing Message-Id: header                        
+ 1.0 MISSING_FROM           Missing From: header                              
+-0.0 NO_RECEIVED            Informational: message has no Received headers    
+ 1.2 MISSING_HEADERS        Missing To: header                                
+-0.0 NO_RELAYS              Informational: message was not relayed via SMTP   
+ 2.5 MONEY_BACK             BODY: Money back guarantee                        
+ 0.0 HTML_MESSAGE           BODY: HTML included in message
+ 0.0 NO_HEADERS_MESSAGE     Message appears to be missing most RFC-822 headers
+ 2.2 DRUGS_ERECTILE         Refers to an erectile drug
+
+The original message was not completely plain text, and may be unsafe to
+open with some email clients; in particular, it may contain a virus,
+or confirm that your address can receive spam.  If you wish to view
+it, it may be safer to save it to a file and open it with an editor.
+
+
+------------=_67A9EF43.EC247F5D
+Content-Type: message/rfc822; x-spam-type=original
+Content-Description: original message before SpamAssassin
+Content-Disposition: attachment
+Content-Transfer-Encoding: 8bit
+
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="Part_af7eace217e10ccb689dd03f0d264877"
+
+--Part_af7eace217e10ccb689dd03f0d264877
+Content-Type: text/plain; charset="UTF-8"
+
+This email is spam. We sell rolexss for cheap. Get your viagra. We also
+sell weight loss pills today. Money back guaranteed. sEnd me $500 and
+I'll send you back $700. don't tell anyone. Send this email to ten
+friends
+
+--Part_af7eace217e10ccb689dd03f0d264877
+Content-Type: text/html; charset="UTF-8"
+
+<html>
+  <body>
+    What
+  </body>
+</html>
+
+--Part_af7eace217e10ccb689dd03f0d264877--
+
+
+------------=_67A9EF43.EC247F5D--
+`;
+    expect(parsePointingTableRows(spamdResponse)).toMatchSnapshot();
+  });
+
+  test('works with names that exceed the column length', () => {
+    const partialSpamResponse = `
+ pts rule name              description
+---- ---------------------- --------------------------------------------------
+ 1.4 MISSING_DATE           Missing Date: header
+ 1.0 MISSING_FROM           Missing From: header
+ 0.1 MISSING_MID            Missing Message-Id: header
+-0.0 NO_RECEIVED            Informational: message has no Received headers
+ 1.8 MISSING_SUBJECT        Missing Subject: header
+ 0.0 URIBL_DBL_BLOCKED_OPENDNS ADMINISTRATOR NOTICE: The query to
+                            dbl.spamhaus.org was blocked due to usage of an
+                             open resolver. See
+                            https://www.spamhaus.org/returnc/pub/
+                            [URI: app.papermark.io]
+ 1.2 MISSING_HEADERS        Missing To: header
+-0.0 NO_RELAYS              Informational: message was not relayed via SMTP
+ 0.0 HTML_MESSAGE           BODY: HTML included in message
+ 0.0 NO_HEADERS_MESSAGE     Message appears to be missing most RFC-822 headers
+ 3.7 DOS_BODY_HIGH_NO_MID   High bit body and no message ID header
+ 2.1 FONT_INVIS_LONG_LINE   Invisible text + long lines
+ 0.8 HTML_TEXT_INVISIBLE_FONT HTML hidden text - word obfuscation?`;
+
+    expect(parsePointingTableRows(partialSpamResponse)).toMatchSnapshot();
+  });
+
+  test('works with a multiline description', () => {
+    const partialSpamResponse = `â€Œâ [...]
+
+Content analysis details:   (9.4 points, 5.0 required)
+
+ pts rule name              description
+---- ---------------------- --------------------------------------------------
+-0.0 NO_RECEIVED            Informational: message has no Received headers
+ 0.1 MISSING_MID            Missing Message-Id: header
+ 1.4 MISSING_DATE           Missing Date: header
+ 1.0 MISSING_FROM           Missing From: header
+ 1.8 MISSING_SUBJECT        Missing Subject: header
+ 1.2 MISSING_HEADERS        Missing To: header
+-0.0 NO_RELAYS              Informational: message was not relayed via SMTP
+ 0.0 URIBL_BLOCKED          ADMINISTRATOR NOTICE: The query to URIBL was blocked.
+                            See
+                            http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+                             for more information.
+                            [URI: stripe.com]
+ 0.0 HTML_MESSAGE           BODY: HTML included in message
+ 0.0 NO_HEADERS_MESSAGE     Message appears to be missing most RFC-822 headers
+ 3.9 DOS_BODY_HIGH_NO_MID   High bit body and no message ID header
+
+The original message was not completely plain text, and may be unsafe to
+open with some email clients; in particular, it may contain a virus,
+or confirm that your address can receive spam.  If you wish to view
+it, it may be safer to save it to a file and open it with an editor.
+
+
+------------=_67BF2F0C.CEF6CDE8
+Content-Type: message/rfc822; x-spam-type=original`;
+
+    expect(parsePointingTableRows(partialSpamResponse)).toMatchSnapshot();
+  });
+});
+
+```
+
+---
+
+## Overview
+
+This is a JavaScript/TypeScript file. 
+
+---
+
+## Detailed Analysis
+
+### Functions
+
+The following functions are defined in this file:
+
+- `partialSpamResponse()`
+- `spamdResponse()`
+
+### Dependencies
+
+This file imports/requires:
+
+- `./parse-pointing-table-rows`
+
+---
+
+## Keywords & Identifiers
+
+**Total Unique Identifiers:** 200
+
+- `CEF6CDE8`
+- `Checker`
+- `Content`
+- `DOS_BODY_HIGH_NO_MID`
+- `DRUGS_ERECTILE`
+- `Date`
+- `Description`
+- `Disposition`
+- `DnsBlocklists`
+- `EC247F5D`
+- `Encoding`
+- `FONT_INVIS_LONG_LINE`
+- `Feb`
+- `Flag`
+- `Get`
+- `HTML_MESSAGE`
+- `HTML_TEXT_INVISIBLE_FONT`
+- `High`
+- `Informational`
+- `Invisible`
+- `Level`
+- `MISSING_DATE`
+- `MISSING_FROM`
+- `MISSING_HEADERS`
+- `MISSING_MID`
+- `MISSING_SUBJECT`
+- `MONEY_BACK`
+- `Message`
+- `Missing`
+- `Mon`
+- `Money`
+- `NO_HEADERS_MESSAGE`
+- `NO_RECEIVED`
+- `NO_RELAYS`
+- `Received`
+- `Refers`
+- `See`
+- `Send`
+- `Spam`
+- `SpamAssassin`
+- `Status`
+- `Subject`
+- `Transfer`
+- `Type`
+- `URIBL_BLOCKED`
+- `URIBL_DBL_BLOCKED_OPENDNS`
+- `Version`
+- `What`
+- `Yes`
+- `_67A9EF43`
+- `_67BF2F0C`
+- `address`
+- `also`
+- `analysis`
+- `any`
+- `anyone`
+- `apache`
+- `app`
+- `appears`
+- `attached`
+- `attachment`
+- `autolearn`
+- `autolearn_force`
+- `back`
+- `before`
+- `bit`
+- `block`
+- `blocked`
+- `body`
+- `boundary`
+- `charset`
+- `cheap`
+- `clients`
+- `column`
+- `com`
+- `completely`
+- `computer`
+- `confirm`
+- `contain`
+- `dbl`
+- `describe`
+- `description`
+- `details`
+- `detection`
+- `dnsbl`
+- `don`
+- `drug`
+- `due`
+- `editor`
+- `emai`
+- `email`
+- `emails`
+- `erectile`
+- `exceed`
+- `expect`
+- `file`
+- `format`
+- `friends`
+- `future`
+- `gabriels`
+- `guarantee`
+- `guaranteed`
+- `header`
+- `headers`
+- `hidden`
+- `html`
+- `http`
+- `https`
+- `identified`
+- `included`
+- `incoming`
+- `information`
+- `inline`
+- `label`
+- `length`
+- `lines`
+- `localhost`
+- `long`
+- `loss`
+- `message`
+- `missing`
+- `mixed`
+- `more`
+- `most`
+- `multi`
+- `multiline`
+- `multipart`
+- `name`
+- `names`
+- `obfuscation`
+- `open`
+- `org`
+- `original`
+- `papermark`
+- `parse`
+- `parsePointingTableRows`
+- `part`
+- `partialSpamResponse`
+- `particular`
+- `pills`
+- `plain`
+- `pointing`
+- `points`
+- `possible`
+- `preview`
+- `pts`
+- `pub`
+- `query`
+- `questions`
+- `receive`
+- `relayed`
+- `required`
+- `resolver`
+- `returnc`
+- `rfc822`
+- `rolexss`
+- `root`
+- `rows`
+- `rule`
+- `running`
+- `sEnd`
+- `safer`
+- `save`
+- `score`
+- `see`
+- `sell`
+- `send`
+- `similar`
+- `software`
+- `some`
+- `spam`
+- `spamassassin`
+- `spamdResponse`
+- `spamhaus`
+- `spammy`
+- `stripe`
+- `system`
+- `table`
+- `tell`
+- `ten`
+- `test`
+- `tests`
+- `text`
+- `toMatchSnapshot`
+- `today`
+- `type`
+- `unsafe`
+- `usage`
+- `version`
+- `via`
+- `viagra`
+- `view`
+- `virus`
+- `weight`
+- `wiki`
+- `wish`
+- `word`
+- `works`
+- `www`
+- `you`
+
+---
+
+## Related Files
+
+*Related files analysis would require cross-referencing imports and exports across the codebase.*
+

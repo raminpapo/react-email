@@ -1,0 +1,666 @@
+# Documentation: languages-available.ts
+**File Path:** `packages/code-block/src/languages-available.ts`
+**Language:** typescript
+**Size:** 5,115 bytes
+**Lines:** 403
+**Generated:** 2025-11-15T20:37:31.554985Z
+
+---
+
+## Table of Contents
+
+1. [File Metadata](#file-metadata)
+2. [Original Source](#original-source)
+3. [Overview](#overview)
+4. [Detailed Analysis](#detailed-analysis)
+5. [Keywords & Identifiers](#keywords--identifiers)
+6. [Related Files](#related-files)
+
+---
+
+## File Metadata
+
+- **Path:** `packages/code-block/src/languages-available.ts`
+- **Name:** `languages-available.ts`
+- **Extension:** `.ts`
+- **Language:** typescript
+- **Size:** 5,115 bytes (5.00 KB)
+- **Lines of Code:** 403
+
+---
+
+## Original Source
+
+```typescript
+export type PrismLanguage =
+  | 'markup'
+  | 'html'
+  | 'xml'
+  | 'svg'
+  | 'mathml'
+  | 'ssml'
+  | 'atom'
+  | 'rss'
+  | 'css'
+  | 'clike'
+  | 'javascript'
+  | 'js'
+  | 'abap'
+  | 'abnf'
+  | 'actionscript'
+  | 'ada'
+  | 'agda'
+  | 'al'
+  | 'antlr4'
+  | 'g4'
+  | 'apacheconf'
+  | 'apex'
+  | 'apl'
+  | 'applescript'
+  | 'aql'
+  | 'arduino'
+  | 'ino'
+  | 'arff'
+  | 'armasm'
+  | 'arm-asm'
+  | 'arturo'
+  | 'art'
+  | 'asciidoc'
+  | 'adoc'
+  | 'aspnet'
+  | 'asm6502'
+  | 'asmatmel'
+  | 'autohotkey'
+  | 'autoit'
+  | 'avisynth'
+  | 'avs'
+  | 'avro-idl'
+  | 'avdl'
+  | 'awk'
+  | 'gawk'
+  | 'bash'
+  | 'sh'
+  | 'shell'
+  | 'basic'
+  | 'batch'
+  | 'bbcode'
+  | 'shortcode'
+  | 'bbj'
+  | 'bicep'
+  | 'birb'
+  | 'bison'
+  | 'bnf'
+  | 'rbnf'
+  | 'bqn'
+  | 'brainfuck'
+  | 'brightscript'
+  | 'bro'
+  | 'bsl'
+  | 'oscript'
+  | 'c'
+  | 'csharp'
+  | 'cs'
+  | 'dotnet'
+  | 'cpp'
+  | 'cfscript'
+  | 'cfc'
+  | 'chaiscript'
+  | 'cil'
+  | 'cilkc'
+  | 'cilk-c'
+  | 'cilkcpp'
+  | 'cilk-cpp'
+  | 'cilk'
+  | 'clojure'
+  | 'cmake'
+  | 'cobol'
+  | 'coffeescript'
+  | 'coffee'
+  | 'concurnas'
+  | 'conc'
+  | 'csp'
+  | 'cooklang'
+  | 'coq'
+  | 'crystal'
+  | 'css-extras'
+  | 'csv'
+  | 'cue'
+  | 'cypher'
+  | 'd'
+  | 'dart'
+  | 'dataweave'
+  | 'dax'
+  | 'dhall'
+  | 'diff'
+  | 'django'
+  | 'jinja2'
+  | 'dns-zone-file'
+  | 'dns-zone'
+  | 'docker'
+  | 'dockerfile'
+  | 'dot'
+  | 'gv'
+  | 'ebnf'
+  | 'editorconfig'
+  | 'eiffel'
+  | 'ejs'
+  | 'eta'
+  | 'elixir'
+  | 'elm'
+  | 'etlua'
+  | 'erb'
+  | 'erlang'
+  | 'excel-formula'
+  | 'xlsx'
+  | 'xls'
+  | 'fsharp'
+  | 'factor'
+  | 'false'
+  | 'firestore-security-rules'
+  | 'flow'
+  | 'fortran'
+  | 'ftl'
+  | 'gml'
+  | 'gamemakerlanguage'
+  | 'gap'
+  | 'gcode'
+  | 'gdscript'
+  | 'gedcom'
+  | 'gettext'
+  | 'po'
+  | 'gherkin'
+  | 'git'
+  | 'glsl'
+  | 'gn'
+  | 'gni'
+  | 'linker-script'
+  | 'ld'
+  | 'go'
+  | 'go-module'
+  | 'go-mod'
+  | 'gradle'
+  | 'graphql'
+  | 'groovy'
+  | 'haml'
+  | 'handlebars'
+  | 'hbs'
+  | 'mustache'
+  | 'haskell'
+  | 'hs'
+  | 'haxe'
+  | 'hcl'
+  | 'hlsl'
+  | 'hoon'
+  | 'http'
+  | 'hpkp'
+  | 'hsts'
+  | 'ichigojam'
+  | 'icon'
+  | 'icu-message-format'
+  | 'idris'
+  | 'idr'
+  | 'ignore'
+  | 'gitignore'
+  | 'hgignore'
+  | 'npmignore'
+  | 'inform7'
+  | 'ini'
+  | 'io'
+  | 'j'
+  | 'java'
+  | 'javadoc'
+  | 'javadoclike'
+  | 'javastacktrace'
+  | 'jexl'
+  | 'jolie'
+  | 'jq'
+  | 'jsdoc'
+  | 'js-extras'
+  | 'json'
+  | 'webmanifest'
+  | 'json5'
+  | 'jsonp'
+  | 'jsstacktrace'
+  | 'js-templates'
+  | 'julia'
+  | 'keepalived'
+  | 'keyman'
+  | 'kotlin'
+  | 'kt'
+  | 'kts'
+  | 'kumir'
+  | 'kum'
+  | 'kusto'
+  | 'latex'
+  | 'tex'
+  | 'context'
+  | 'latte'
+  | 'less'
+  | 'lilypond'
+  | 'ly'
+  | 'liquid'
+  | 'lisp'
+  | 'emacs'
+  | 'elisp'
+  | 'emacs-lisp'
+  | 'livescript'
+  | 'llvm'
+  | 'log'
+  | 'lolcode'
+  | 'lua'
+  | 'magma'
+  | 'makefile'
+  | 'markdown'
+  | 'md'
+  | 'markup-templating'
+  | 'mata'
+  | 'matlab'
+  | 'maxscript'
+  | 'mel'
+  | 'mermaid'
+  | 'metafont'
+  | 'mizar'
+  | 'mongodb'
+  | 'monkey'
+  | 'moonscript'
+  | 'moon'
+  | 'n1ql'
+  | 'n4js'
+  | 'n4jsd'
+  | 'nand2tetris-hdl'
+  | 'naniscript'
+  | 'nani'
+  | 'nasm'
+  | 'neon'
+  | 'nevod'
+  | 'nginx'
+  | 'nim'
+  | 'nix'
+  | 'nsis'
+  | 'objectivec'
+  | 'objc'
+  | 'ocaml'
+  | 'odin'
+  | 'opencl'
+  | 'openqasm'
+  | 'qasm'
+  | 'oz'
+  | 'parigp'
+  | 'parser'
+  | 'pascal'
+  | 'objectpascal'
+  | 'pascaligo'
+  | 'psl'
+  | 'pcaxis'
+  | 'px'
+  | 'peoplecode'
+  | 'pcode'
+  | 'perl'
+  | 'php'
+  | 'phpdoc'
+  | 'php-extras'
+  | 'plant-uml'
+  | 'plantuml'
+  | 'plsql'
+  | 'powerquery'
+  | 'pq'
+  | 'mscript'
+  | 'powershell'
+  | 'processing'
+  | 'prolog'
+  | 'promql'
+  | 'properties'
+  | 'protobuf'
+  | 'pug'
+  | 'puppet'
+  | 'pure'
+  | 'purebasic'
+  | 'pbfasm'
+  | 'purescript'
+  | 'purs'
+  | 'python'
+  | 'py'
+  | 'qsharp'
+  | 'qs'
+  | 'q'
+  | 'qml'
+  | 'qore'
+  | 'r'
+  | 'racket'
+  | 'rkt'
+  | 'cshtml'
+  | 'razor'
+  | 'jsx'
+  | 'tsx'
+  | 'reason'
+  | 'regex'
+  | 'rego'
+  | 'renpy'
+  | 'rpy'
+  | 'rescript'
+  | 'res'
+  | 'rest'
+  | 'rip'
+  | 'roboconf'
+  | 'robotframework'
+  | 'robot'
+  | 'ruby'
+  | 'rb'
+  | 'rust'
+  | 'sas'
+  | 'sass'
+  | 'scss'
+  | 'scala'
+  | 'scheme'
+  | 'shell-session'
+  | 'sh-session'
+  | 'shellsession'
+  | 'smali'
+  | 'smalltalk'
+  | 'smarty'
+  | 'sml'
+  | 'smlnj'
+  | 'solidity'
+  | 'sol'
+  | 'solution-file'
+  | 'sln'
+  | 'soy'
+  | 'sparql'
+  | 'rq'
+  | 'splunk-spl'
+  | 'sqf'
+  | 'sql'
+  | 'squirrel'
+  | 'stan'
+  | 'stata'
+  | 'iecst'
+  | 'stylus'
+  | 'supercollider'
+  | 'sclang'
+  | 'swift'
+  | 'systemd'
+  | 't4-templating'
+  | 't4-cs'
+  | 't4'
+  | 't4-vb'
+  | 'tap'
+  | 'tcl'
+  | 'tt2'
+  | 'textile'
+  | 'toml'
+  | 'tremor'
+  | 'trickle'
+  | 'troy'
+  | 'turtle'
+  | 'trig'
+  | 'twig'
+  | 'typescript'
+  | 'ts'
+  | 'typoscript'
+  | 'tsconfig'
+  | 'unrealscript'
+  | 'uscript'
+  | 'uc'
+  | 'uorazor'
+  | 'uri'
+  | 'url'
+  | 'v'
+  | 'vala'
+  | 'vbnet'
+  | 'velocity'
+  | 'verilog'
+  | 'vhdl'
+  | 'vim'
+  | 'visual-basic'
+  | 'vb'
+  | 'vba'
+  | 'warpscript'
+  | 'wasm'
+  | 'web-idl'
+  | 'webidl'
+  | 'wgsl'
+  | 'wiki'
+  | 'wolfram'
+  | 'mathematica'
+  | 'nb'
+  | 'wl'
+  | 'wren'
+  | 'xeora'
+  | 'xeoracube'
+  | 'xml-doc'
+  | 'xojo'
+  | 'xquery'
+  | 'yaml'
+  | 'yml'
+  | 'yang'
+  | 'zig';
+
+```
+
+---
+
+## Overview
+
+This is a JavaScript/TypeScript file. 
+
+---
+
+## Detailed Analysis
+
+### Type Definitions
+
+- `PrismLanguage`
+
+---
+
+## Keywords & Identifiers
+
+**Total Unique Identifiers:** 200
+
+- `PrismLanguage`
+- `abap`
+- `abnf`
+- `actionscript`
+- `ada`
+- `adoc`
+- `agda`
+- `antlr4`
+- `apacheconf`
+- `apex`
+- `apl`
+- `applescript`
+- `aql`
+- `arduino`
+- `arff`
+- `arm`
+- `armasm`
+- `art`
+- `arturo`
+- `asciidoc`
+- `asm`
+- `asm6502`
+- `asmatmel`
+- `aspnet`
+- `atom`
+- `autohotkey`
+- `autoit`
+- `avdl`
+- `avisynth`
+- `avro`
+- `avs`
+- `awk`
+- `bash`
+- `basic`
+- `batch`
+- `bbcode`
+- `bbj`
+- `bicep`
+- `birb`
+- `bison`
+- `bnf`
+- `bqn`
+- `brainfuck`
+- `brightscript`
+- `bro`
+- `bsl`
+- `cfc`
+- `cfscript`
+- `chaiscript`
+- `cil`
+- `cilk`
+- `cilkc`
+- `cilkcpp`
+- `clike`
+- `clojure`
+- `cmake`
+- `cobol`
+- `coffee`
+- `coffeescript`
+- `conc`
+- `concurnas`
+- `context`
+- `cooklang`
+- `coq`
+- `cpp`
+- `crystal`
+- `csharp`
+- `cshtml`
+- `csp`
+- `css`
+- `csv`
+- `cue`
+- `cypher`
+- `dart`
+- `dataweave`
+- `dax`
+- `dhall`
+- `diff`
+- `django`
+- `dns`
+- `doc`
+- `docker`
+- `dockerfile`
+- `dot`
+- `dotnet`
+- `ebnf`
+- `editorconfig`
+- `eiffel`
+- `ejs`
+- `elisp`
+- `elixir`
+- `elm`
+- `emacs`
+- `erb`
+- `erlang`
+- `eta`
+- `etlua`
+- `excel`
+- `extras`
+- `factor`
+- `file`
+- `firestore`
+- `flow`
+- `format`
+- `formula`
+- `fortran`
+- `fsharp`
+- `ftl`
+- `gamemakerlanguage`
+- `gap`
+- `gawk`
+- `gcode`
+- `gdscript`
+- `gedcom`
+- `gettext`
+- `gherkin`
+- `git`
+- `gitignore`
+- `glsl`
+- `gml`
+- `gni`
+- `gradle`
+- `graphql`
+- `groovy`
+- `haml`
+- `handlebars`
+- `haskell`
+- `haxe`
+- `hbs`
+- `hcl`
+- `hdl`
+- `hgignore`
+- `hlsl`
+- `hoon`
+- `hpkp`
+- `hsts`
+- `html`
+- `http`
+- `ichigojam`
+- `icon`
+- `icu`
+- `idl`
+- `idr`
+- `idris`
+- `iecst`
+- `ignore`
+- `inform7`
+- `ini`
+- `ino`
+- `java`
+- `javadoc`
+- `javadoclike`
+- `javascript`
+- `javastacktrace`
+- `jexl`
+- `jinja2`
+- `jolie`
+- `jsdoc`
+- `json`
+- `json5`
+- `jsonp`
+- `jsstacktrace`
+- `jsx`
+- `julia`
+- `keepalived`
+- `keyman`
+- `kotlin`
+- `kts`
+- `kum`
+- `kumir`
+- `kusto`
+- `latex`
+- `latte`
+- `less`
+- `lilypond`
+- `linker`
+- `liquid`
+- `lisp`
+- `livescript`
+- `llvm`
+- `log`
+- `lolcode`
+- `lua`
+- `magma`
+- `makefile`
+- `markdown`
+- `markup`
+- `mata`
+- `mathematica`
+- `mathml`
+- `matlab`
+- `maxscript`
+- `mel`
+- `mermaid`
+- `message`
+- `metafont`
+- `mizar`
+- `mod`
+- `module`
+- `mongodb`
+
+---
+
+## Related Files
+
+*Related files analysis would require cross-referencing imports and exports across the codebase.*
+

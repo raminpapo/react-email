@@ -1,0 +1,25 @@
+# Documentation: brand
+
+**Folder Path:** `apps/web/public/brand`
+**Generated:** 2025-11-15T20:38:37.558997Z
+
+---
+
+## Overview
+
+This directory (`apps/web/public/brand`) contains 
+
+## Structure
+
+- **Subdirectories:** 0
+- **Documentation Files:** 4
+- **Keyword Files:** 0
+
+## Purpose & Concepts
+
+*This section provides narrative context about the role and architecture of this directory.*
+
+---
+
+*For detailed file-by-file analysis, see the individual documentation files linked in the index.*
+

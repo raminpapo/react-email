@@ -1,0 +1,419 @@
+# Documentation: render-edge.spec.tsx
+**File Path:** `packages/render/src/node/render-edge.spec.tsx`
+**Language:** tsx
+**Size:** 6,343 bytes
+**Lines:** 171
+**Generated:** 2025-11-15T20:37:31.510452Z
+
+---
+
+## Table of Contents
+
+1. [File Metadata](#file-metadata)
+2. [Original Source](#original-source)
+3. [Overview](#overview)
+4. [Detailed Analysis](#detailed-analysis)
+5. [Keywords & Identifiers](#keywords--identifiers)
+6. [Related Files](#related-files)
+
+---
+
+## File Metadata
+
+- **Path:** `packages/render/src/node/render-edge.spec.tsx`
+- **Name:** `render-edge.spec.tsx`
+- **Extension:** `.tsx`
+- **Language:** tsx
+- **Size:** 6,343 bytes (6.19 KB)
+- **Lines of Code:** 171
+
+---
+
+## Original Source
+
+```tsx
+import { Preview } from '../shared/utils/testing/preview';
+import { Template } from '../shared/utils/testing/template';
+import { render } from './render';
+
+type Import = typeof import('react-dom/server') & {
+  default: typeof import('react-dom/server');
+};
+
+describe('render on the edge', () => {
+  it('converts a React component into HTML with Next 14 error stubs', async () => {
+    vi.mock('react-dom/server', async () => {
+      const ReactDOMServer = await vi.importActual<Import>('react-dom/server');
+      const ERROR_MESSAGE =
+        'Internal Error: do not use legacy react-dom/server APIs. If you encountered this error, please open an issue on the Next.js repo.';
+
+      return {
+        ...ReactDOMServer,
+        default: {
+          ...ReactDOMServer.default,
+          renderToString() {
+            throw new Error(ERROR_MESSAGE);
+          },
+          renderToStaticMarkup() {
+            throw new Error(ERROR_MESSAGE);
+          },
+        },
+        renderToString() {
+          throw new Error(ERROR_MESSAGE);
+        },
+        renderToStaticMarkup() {
+          throw new Error(ERROR_MESSAGE);
+        },
+      };
+    });
+
+    const actualOutput = await render(<Template firstName="Jim" />);
+
+    expect(actualOutput).toMatchInlineSnapshot(
+      `"<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><link rel="preload" as="image" href="img/test.png"/><!--$--><h1>Welcome, <!-- -->Jim<!-- -->!</h1><img alt="test" src="img/test.png"/><p>Thanks for trying our product. We&#x27;re thrilled to have you on board!</p><!--/$-->"`,
+    );
+
+    vi.resetAllMocks();
+  });
+
+  // This is a test to ensure we have no regressions for https://github.com/resend/react-email/issues/1667
+  it('handles characters with a higher byte count gracefully in React 18', async () => {
+    const actualOutput = await render(
+      <>
+        <p>Test Normal 情報Ⅰコース担当者様</p>
+        <p>
+          平素よりお世話になっております。 情報Ⅰサポートチームです。
+          情報Ⅰ本講座につきまして仕様変更のためご連絡させていただきました。{' '}
+        </p>
+        今後ジクタス上の講座につきましては、8回分の授業をひとまとまりとしてパート分けされた状態で公開されてまいります。
+        <p>
+          伴いまして、画面上の表示に一部変更がありますのでお知らせいたします。
+          ご登録いただいた各生徒の受講ペースに応じて公開パートが増えてまいります。
+          具体的な表示イメージは下記ページをご確認ください。
+        </p>
+        <p>
+          2024年8月末時点で情報Ⅰ本講座を受講していたアカウントにつきましては、
+          今まで公開していた第１～９回までの講座一覧に加え、パート分けされた講座が追加で公開されてまりいます。
+          第1～9回の表示はそのまま引き継がれますが、Webドリルの進捗表示はパート分けの講座には適用されません。ご了承くださいませ。
+          仕様変更に伴い、現在教室長もしくは講師に生徒アカウントログインをお願いしておりますが、今後は生徒自身にてログインをしていただいて問題ございません。
+        </p>
+        <p>
+          また、生徒が自宅等にてログインし復習に取り組むことも問題ございませんので、教室にてご指示いただければと存じます。
+          （実際にご指示いただくかは教室判断に委ねさせていただきます。）
+        </p>
+        <p>
+          受講ペースが変更したり、増コマが発生したりする場合などは、公開ペースを本部にて調整いたしますので、下記より必ずご連絡くださいませ。
+          また本件に関して不明な点がございましたら、同フォームよりお問い合わせください。
+          以上、引き続きよろしくお願い申し上げます。 情報Ⅰサポートチーム
+        </p>
+      </>,
+    );
+
+    expect(actualOutput).toMatchSnapshot();
+  });
+
+  it('converts a React component into HTML', async () => {
+    const actualOutput = await render(<Template firstName="Jim" />);
+
+    expect(actualOutput).toMatchInlineSnapshot(
+      `"<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><link rel="preload" as="image" href="img/test.png"/><!--$--><h1>Welcome, <!-- -->Jim<!-- -->!</h1><img alt="test" src="img/test.png"/><p>Thanks for trying our product. We&#x27;re thrilled to have you on board!</p><!--/$-->"`,
+    );
+  });
+
+  it('converts a React component into PlainText', async () => {
+    const actualOutput = await render(<Template firstName="Jim" />, {
+      plainText: true,
+    });
+
+    expect(actualOutput).toMatchInlineSnapshot(`
+      "WELCOME, JIM!
+
+      Thanks for trying our product. We're thrilled to have you on board!"
+    `);
+  });
+
+  it('converts to plain text and removes reserved ID', async () => {
+    const actualOutput = await render(<Preview />, {
+      plainText: true,
+    });
+
+    expect(actualOutput).toMatchInlineSnapshot(
+      `"THIS SHOULD BE RENDERED IN PLAIN TEXT"`,
+    );
+  });
+
+  describe('WritableStream availability', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      vi.doUnmock('react-dom/server');
+      vi.resetModules();
+    });
+
+    it('should fallback to renderToPipeableStream when WritableStream is not available', async () => {
+      vi.stubGlobal('WritableStream', undefined);
+
+      // Mock renderToReadableStream to simulate environments where it exists but WritableStream doesn't
+      vi.doMock('react-dom/server', async () => ({
+        default: {
+          ...(await vi.importActual<Import>('react-dom/server')).default,
+          renderToReadableStream: () => ({ pipeTo: async () => {} }),
+        },
+      }));
+
+      vi.resetModules();
+      const { render } = await import('./render');
+      const actualOutput = await render(<Template firstName="Jim" />);
+
+      expect(actualOutput).toMatchInlineSnapshot(
+        `"<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><link rel="preload" as="image" href="img/test.png"/><!--$--><h1>Welcome, <!-- -->Jim<!-- -->!</h1><img alt="test" src="img/test.png"/><p>Thanks for trying our product. We&#x27;re thrilled to have you on board!</p><!--/$-->"`,
+      );
+    });
+  });
+
+  /**
+   * Create a large email that would trigger React's streaming optimization
+   * if progressiveChunkSize wasn't set to Infinity
+   *
+   * @see https://github.com/resend/react-email/issues/2353
+   */
+  it('renders large emails without hydration markers', async () => {
+    const LargeEmailTemplate = () => {
+      const largeContent = Array(100)
+        .fill(null)
+        .map((_, i) => (
+          <p key={i}>
+            This is paragraph {i} with some content to make the email larger.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris.
+          </p>
+        ));
+
+      return (
+        <div>
+          <h1>Large Email Test</h1>
+          {largeContent}
+        </div>
+      );
+    };
+
+    const actualOutput = await render(<LargeEmailTemplate />);
+
+    expect(actualOutput).toMatchSnapshot();
+  });
+});
+
+```
+
+---
+
+## Overview
+
+This is a JavaScript/TypeScript file. It appears to be a React component or React-related module. 
+
+---
+
+## Detailed Analysis
+
+### Functions
+
+The following functions are defined in this file:
+
+- `ERROR_MESSAGE()`
+- `LargeEmailTemplate()`
+- `ReactDOMServer()`
+- `actualOutput()`
+- `largeContent()`
+
+### Type Definitions
+
+- `Import`
+
+### Dependencies
+
+This file imports/requires:
+
+- `../shared/utils/testing/preview`
+- `../shared/utils/testing/template`
+- `./render`
+
+---
+
+## Keywords & Identifiers
+
+**Total Unique Identifiers:** 167
+
+- `APIs`
+- `Array`
+- `Create`
+- `ERROR_MESSAGE`
+- `Email`
+- `Error`
+- `Infinity`
+- `Internal`
+- `Jim`
+- `Large`
+- `LargeEmailTemplate`
+- `Lorem`
+- `Mock`
+- `Next`
+- `Normal`
+- `PlainText`
+- `Preview`
+- `React`
+- `ReactDOMServer`
+- `Sed`
+- `Template`
+- `Test`
+- `Thanks`
+- `Transitional`
+- `W3C`
+- `Welcome`
+- `WritableStream`
+- `actualOutput`
+- `adipiscing`
+- `afterEach`
+- `aliqua`
+- `alt`
+- `amet`
+- `availability`
+- `available`
+- `board`
+- `byte`
+- `characters`
+- `com`
+- `component`
+- `consectetur`
+- `content`
+- `converts`
+- `count`
+- `describe`
+- `div`
+- `doMock`
+- `doUnmock`
+- `doesn`
+- `dolor`
+- `dolore`
+- `dom`
+- `dtd`
+- `edge`
+- `eiusmod`
+- `elit`
+- `email`
+- `emails`
+- `encountered`
+- `enim`
+- `ensure`
+- `environments`
+- `error`
+- `exercitation`
+- `exists`
+- `expect`
+- `fallback`
+- `fill`
+- `firstName`
+- `github`
+- `gracefully`
+- `handles`
+- `higher`
+- `href`
+- `html`
+- `http`
+- `https`
+- `hydration`
+- `image`
+- `img`
+- `importActual`
+- `incididunt`
+- `into`
+- `ipsum`
+- `issue`
+- `issues`
+- `key`
+- `labore`
+- `laboris`
+- `large`
+- `largeContent`
+- `larger`
+- `legacy`
+- `link`
+- `magna`
+- `make`
+- `map`
+- `markers`
+- `minim`
+- `mock`
+- `nostrud`
+- `open`
+- `optimization`
+- `org`
+- `our`
+- `paragraph`
+- `pipeTo`
+- `plain`
+- `plainText`
+- `please`
+- `png`
+- `preload`
+- `preview`
+- `product`
+- `progressiveChunkSize`
+- `quis`
+- `react`
+- `regressions`
+- `rel`
+- `removes`
+- `render`
+- `renderToPipeableStream`
+- `renderToReadableStream`
+- `renderToStaticMarkup`
+- `renderToString`
+- `renders`
+- `repo`
+- `resend`
+- `reserved`
+- `resetAllMocks`
+- `resetModules`
+- `see`
+- `server`
+- `set`
+- `shared`
+- `simulate`
+- `sit`
+- `some`
+- `src`
+- `streaming`
+- `stubGlobal`
+- `stubs`
+- `template`
+- `tempor`
+- `test`
+- `testing`
+- `text`
+- `thrilled`
+- `toMatchInlineSnapshot`
+- `toMatchSnapshot`
+- `transitional`
+- `trigger`
+- `trying`
+- `type`
+- `ullamco`
+- `unstubAllGlobals`
+- `use`
+- `utils`
+- `veniam`
+- `wasn`
+- `when`
+- `where`
+- `without`
+- `www`
+- `x27`
+- `xhtml1`
+- `you`
+
+---
+
+## Related Files
+
+*Related files analysis would require cross-referencing imports and exports across the codebase.*
+

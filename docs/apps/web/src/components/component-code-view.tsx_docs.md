@@ -1,0 +1,461 @@
+# Documentation: component-code-view.tsx
+**File Path:** `apps/web/src/components/component-code-view.tsx`
+**Language:** tsx
+**Size:** 6,810 bytes
+**Lines:** 206
+**Generated:** 2025-11-15T20:37:32.891549Z
+
+---
+
+## Table of Contents
+
+1. [File Metadata](#file-metadata)
+2. [Original Source](#original-source)
+3. [Overview](#overview)
+4. [Detailed Analysis](#detailed-analysis)
+5. [Keywords & Identifiers](#keywords--identifiers)
+6. [Related Files](#related-files)
+
+---
+
+## File Metadata
+
+- **Path:** `apps/web/src/components/component-code-view.tsx`
+- **Name:** `component-code-view.tsx`
+- **Extension:** `.tsx`
+- **Language:** tsx
+- **Size:** 6,810 bytes (6.65 KB)
+- **Lines of Code:** 206
+
+---
+
+## Original Source
+
+```tsx
+import * as Select from '@radix-ui/react-select';
+import * as Tabs from '@radix-ui/react-tabs';
+import * as allReactEmailComponents from '@react-email/components';
+import * as allReactResponsiveComponents from '@responsive-email/react-email';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import type {
+  CodeVariant,
+  ImportedComponent,
+} from '@/app/components/get-imported-components-for';
+import { useStoredState } from '@/hooks/use-stored-state';
+import { convertUrisIntoUrls } from '@/utils/convert-uris-into-urls';
+import { CodeBlock } from './code-block';
+import { CopyCode } from './copy-code';
+import { TabTrigger } from './tab-trigger';
+
+type ReactCodeVariant = Exclude<CodeVariant, 'html' | 'react'>;
+
+export function ComponentCodeView({
+  component,
+}: {
+  component: ImportedComponent;
+}) {
+  const [selectedReactCodeVariant, setSelectedReactCodeVariant] =
+    useStoredState<ReactCodeVariant>('code-variant', 'tailwind');
+
+  const [selectedLanguage, setSelectedLanguage] = useStoredState<
+    'html' | 'react'
+  >('code-language', 'react');
+
+  let code = component.code.html;
+  if (selectedLanguage === 'react') {
+    const codeForSelectedVariant = component.code[selectedReactCodeVariant];
+    if (codeForSelectedVariant) {
+      code = codeForSelectedVariant;
+    } else if (component.code.react) {
+      code = component.code.react;
+    }
+  } else {
+    code = code.replace(/height\s*:\s*100vh;?/, '');
+  }
+  code = convertUrisIntoUrls(code);
+
+  if (selectedLanguage === 'react') {
+    const importsReactResponsive = extractReactComponents(
+      code,
+      Object.keys(allReactResponsiveComponents),
+    );
+
+    const importsReactEmail = extractReactComponents(
+      code,
+      Object.keys(allReactEmailComponents),
+    );
+
+    let importStatements = '';
+
+    if (importsReactEmail.length > 0) {
+      importStatements += `import { ${importsReactEmail.join(
+        ', ',
+      )} } from "@react-email/components";\n`;
+    }
+
+    if (importsReactResponsive.length > 0) {
+      importStatements += `import { ${importsReactResponsive.join(
+        ', ',
+      )} } from "@responsive-email/react-email";\n`;
+    }
+
+    code = `${importStatements}\n${code}`;
+  }
+
+  return (
+    <div className="flex h-full w-full flex-col gap-2 bg-slate-3">
+      <div className="relative flex w-full justify-between gap-4 border-slate-4 border-b border-solid p-4 text-xs">
+        <Tabs.Root
+          defaultValue={selectedLanguage}
+          onValueChange={(v) => {
+            setSelectedLanguage(v as 'react' | 'html');
+          }}
+          value={selectedLanguage}
+        >
+          <Tabs.List className="p1-text-xs flex w-fit space-x-1 overflow-hidden">
+            <TabTrigger
+              activeView={selectedLanguage}
+              layoutId={`${component.slug}-language`}
+              value="react"
+            >
+              React
+            </TabTrigger>
+            <TabTrigger
+              activeView={selectedLanguage}
+              layoutId={`${component.slug}-language`}
+              value="html"
+            >
+              HTML
+            </TabTrigger>
+          </Tabs.List>
+        </Tabs.Root>
+        <div className="flex gap-2">
+          {selectedLanguage === 'react' && !component.code.react ? (
+            <ReactVariantSelect
+              onChange={(newValue) => {
+                localStorage.setItem('code-variant', newValue);
+                setSelectedReactCodeVariant(newValue);
+              }}
+              value={selectedReactCodeVariant}
+            />
+          ) : null}
+
+          <CopyCode className="shadow-none p-2 h-8 w-8" code={code} />
+        </div>
+      </div>
+      <div className="h-full w-full overflow-auto">
+        <CodeBlock language={selectedLanguage === 'html' ? 'html' : 'tsx'}>
+          {code}
+        </CodeBlock>
+      </div>
+    </div>
+  );
+}
+
+const ReactVariantSelect = ({
+  value,
+  onChange,
+}: {
+  value: ReactCodeVariant;
+  onChange: (newValue: ReactCodeVariant) => void;
+}) => {
+  return (
+    <Select.Root
+      onValueChange={(variant: ReactCodeVariant) => {
+        onChange(variant);
+      }}
+      value={value}
+    >
+      <Select.Trigger
+        aria-label="Choose the styling solution"
+        className="flex h-8 items-center justify-center gap-1 rounded bg-slate-3 px-3 leading-none outline-none focus-within:ring-2 focus-within:ring-slate-6 focus-within:ring-opacity-50 data-[placeholder]:text-slate-11"
+      >
+        <Select.Value>
+          {(() => {
+            if (value === 'tailwind') {
+              return 'Tailwind CSS';
+            }
+
+            return 'Inline CSS';
+          })()}
+        </Select.Value>
+        <Select.Icon>
+          <ChevronDownIcon size={14} />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content className="z-[2] overflow-hidden rounded-md bg-[#1F2122]">
+          <Select.ScrollUpButton className="flex h-6 cursor-default items-center justify-center">
+            <ChevronUpIcon size={12} />
+          </Select.ScrollUpButton>
+          <Select.Viewport className="p-1">
+            {['tailwind', 'inline-styles'].map((variant) => (
+              <Select.Item
+                className="relative flex h-8 cursor-pointer select-none items-center rounded-[.25rem] px-6 py-2 text-slate-11 text-xs leading-none transition-colors ease-[cubic-bezier(.36,.66,.6,1)] data-[disabled]:pointer-events-none data-[highlighted]:bg-slate-3 data-[highlighted]:text-slate-12 data-[highlighted]:outline-none"
+                key={variant}
+                value={variant}
+              >
+                <Select.ItemText>
+                  {(() => {
+                    if (variant === 'tailwind') {
+                      return 'Tailwind CSS';
+                    }
+
+                    return 'Inline CSS';
+                  })()}
+                </Select.ItemText>
+                <Select.ItemIndicator className="absolute left-0 inline-flex w-6 items-center justify-center text-slate-12">
+                  <CheckIcon size={10} />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  );
+};
+
+/**
+ * Extracts React component names from a string of React/JSX code
+ */
+const extractReactComponents = (
+  code: string,
+  supportedComponents: string[],
+): string[] => {
+  const componentPattern =
+    /(?:<|import\s+\{?\s*)(?<componentName>[A-Z][a-zA-Z0-9]*)/g;
+  const matches = Array.from(code.matchAll(componentPattern));
+
+  const componentNames = Array.from(
+    new Set(
+      matches
+        .map((match) => match.groups?.componentName)
+        .filter((name): name is string => Boolean(name)),
+    ),
+  );
+
+  return componentNames.filter((name) => supportedComponents.includes(name));
+};
+
+```
+
+---
+
+## Overview
+
+This is a JavaScript/TypeScript file. It appears to be a React component or React-related module. It contains named exports. 
+
+---
+
+## Detailed Analysis
+
+### Functions
+
+The following functions are defined in this file:
+
+- `ComponentCodeView()`
+- `ReactVariantSelect()`
+- `code()`
+- `codeForSelectedVariant()`
+- `componentNames()`
+- `componentPattern()`
+- `extractReactComponents()`
+- `importStatements()`
+- `importsReactEmail()`
+- `importsReactResponsive()`
+- `matches()`
+
+### Type Definitions
+
+- `ReactCodeVariant`
+
+### Dependencies
+
+This file imports/requires:
+
+- `./code-block`
+- `./copy-code`
+- `./tab-trigger`
+- `@/app/components/get-imported-components-for`
+- `@/hooks/use-stored-state`
+- `@/utils/convert-uris-into-urls`
+- `@radix-ui/react-select`
+- `@radix-ui/react-tabs`
+- `@react-email/components`
+- `@responsive-email/react-email`
+- `lucide-react`
+
+---
+
+## Keywords & Identifiers
+
+**Total Unique Identifiers:** 160
+
+- `Array`
+- `Boolean`
+- `CheckIcon`
+- `ChevronDownIcon`
+- `ChevronUpIcon`
+- `Choose`
+- `CodeBlock`
+- `CodeVariant`
+- `ComponentCodeView`
+- `Content`
+- `CopyCode`
+- `Exclude`
+- `Extracts`
+- `Icon`
+- `ImportedComponent`
+- `Inline`
+- `Item`
+- `ItemIndicator`
+- `ItemText`
+- `List`
+- `Object`
+- `Portal`
+- `React`
+- `ReactCodeVariant`
+- `ReactVariantSelect`
+- `Root`
+- `ScrollUpButton`
+- `Select`
+- `Set`
+- `TabTrigger`
+- `Tabs`
+- `Tailwind`
+- `Trigger`
+- `Value`
+- `Viewport`
+- `absolute`
+- `activeView`
+- `allReactEmailComponents`
+- `allReactResponsiveComponents`
+- `app`
+- `aria`
+- `auto`
+- `between`
+- `bezier`
+- `block`
+- `border`
+- `center`
+- `className`
+- `code`
+- `codeForSelectedVariant`
+- `col`
+- `colors`
+- `component`
+- `componentName`
+- `componentNames`
+- `componentPattern`
+- `components`
+- `convert`
+- `convertUrisIntoUrls`
+- `copy`
+- `cubic`
+- `cursor`
+- `data`
+- `defaultValue`
+- `disabled`
+- `div`
+- `ease`
+- `email`
+- `events`
+- `extractReactComponents`
+- `filter`
+- `fit`
+- `flex`
+- `focus`
+- `full`
+- `gap`
+- `get`
+- `groups`
+- `height`
+- `hidden`
+- `highlighted`
+- `hooks`
+- `html`
+- `importStatements`
+- `imported`
+- `importsReactEmail`
+- `importsReactResponsive`
+- `includes`
+- `inline`
+- `into`
+- `items`
+- `join`
+- `justify`
+- `key`
+- `keys`
+- `label`
+- `language`
+- `layoutId`
+- `leading`
+- `left`
+- `length`
+- `localStorage`
+- `lucide`
+- `map`
+- `match`
+- `matchAll`
+- `matches`
+- `name`
+- `names`
+- `newValue`
+- `onChange`
+- `onValueChange`
+- `opacity`
+- `outline`
+- `overflow`
+- `placeholder`
+- `pointer`
+- `radix`
+- `react`
+- `relative`
+- `replace`
+- `responsive`
+- `ring`
+- `rounded`
+- `select`
+- `selectedLanguage`
+- `selectedReactCodeVariant`
+- `setItem`
+- `setSelectedLanguage`
+- `setSelectedReactCodeVariant`
+- `shadow`
+- `size`
+- `slate`
+- `slug`
+- `solid`
+- `solution`
+- `space`
+- `state`
+- `stored`
+- `string`
+- `styles`
+- `styling`
+- `supportedComponents`
+- `tab`
+- `tabs`
+- `tailwind`
+- `text`
+- `transition`
+- `trigger`
+- `tsx`
+- `type`
+- `uris`
+- `urls`
+- `use`
+- `useStoredState`
+- `utils`
+- `value`
+- `variant`
+- `void`
+- `within`
+
+---
+
+## Related Files
+
+*Related files analysis would require cross-referencing imports and exports across the codebase.*
+
